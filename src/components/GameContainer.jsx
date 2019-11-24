@@ -2,7 +2,6 @@ import React, {useState} from 'react'
 import GameBoard from './GameBoard'
 
 function GameContainer() {
-  // const [currentPlayer, setState] = useState(1)
   const createBoard = () => {
     const board = []
     for(let i=0; i < 8; i++){
@@ -24,12 +23,15 @@ function GameContainer() {
     board[4][4] = 1
     board[3][4] = 2
     board[4][3] = 2
-    setState({board: board, currentPlayer: 1})
+    setState({board: board, currentPlayerId: 1})
   }
 
   return (
     <div>
-      <p>It is someones turn</p>
+      <p>
+
+        {currentPlayerId ? `It is player ${currentPlayerId}'s turn` : ''}
+      </p>
       <p>
         {currentPlayerId === 0 ?
           <button onClick={startGame}>Start Game</button>
