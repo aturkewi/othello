@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import GameBoard from './GameBoard'
 
 function GameContainer() {
@@ -63,7 +63,7 @@ function GameContainer() {
       currentCellOwner = getLocation(row + offset, column)
       offset++
     }
-    if(currentCellOwner == currentPlayerId){
+    if(currentCellOwner === currentPlayerId){
       for(let i=1; i < offset; i++){
         board[row+i][column] = currentPlayerId
       }
@@ -77,7 +77,7 @@ function GameContainer() {
       currentCellOwner = getLocation(row - offset, column)
       offset++
     }
-    if(currentCellOwner == currentPlayerId){
+    if(currentCellOwner === currentPlayerId){
       for(let i=1; i < offset; i++){
         board[row-i][column] = currentPlayerId
       }
@@ -91,7 +91,7 @@ function GameContainer() {
       currentCellOwner = getLocation(row, column - offset)
       offset++
     }
-    if(currentCellOwner == currentPlayerId){
+    if(currentCellOwner === currentPlayerId){
       for(let i=1; i < offset; i++){
         board[row][column-i] = currentPlayerId
       }
@@ -105,7 +105,7 @@ function GameContainer() {
       currentCellOwner = getLocation(row, column + offset)
       offset++
     }
-    if(currentCellOwner == currentPlayerId){
+    if(currentCellOwner === currentPlayerId){
       for(let i=1; i < offset; i++){
         board[row][column+i] = currentPlayerId
       }
@@ -119,6 +119,35 @@ function GameContainer() {
     rightFlips(row, column)
   }
 
+  const endGame = (score) => {
+    let winner
+    if (score[1] > score[2]) {
+      winner = 1
+    }else {
+      winner = 2
+    }
+    alert(`The winner is player${winner}! Final score: \n Player1: ${score[1]} \n Player2: ${score[2]}`)
+  }
+
+  const checkEndGame = () => {
+    console.log("checking if game is over...")
+    const score = {1: 0, 2: 0}
+    let stillPlaying = false
+    board.forEach( row => {
+      row.forEach( cell => {
+        if(cell === 0){
+          stillPlaying = true
+        }
+        score[cell]++
+      })
+    })
+    if(!stillPlaying){
+      endGame(score)
+    }
+  }
+
+  useEffect(checkEndGame)
+
   const makeMove = (row, column) => {
     console.log(`Row: ${row} | Columnn: ${column}`)
     // confirm valid move, alert otherwise
@@ -130,6 +159,8 @@ function GameContainer() {
     board[row][column] = currentPlayerId
     // check for flips and flip
     checkForFlips(row, column)
+
+    // update state
     setState({board: board, currentPlayerId: nextPlayer()})
   }
 
