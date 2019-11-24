@@ -3,4 +3,5 @@
 npm run build
 git branch -D gh-pages
 git checkout gh-pages
-mv ./build/* ./
+rm -rf static
+cp -R ./build/* ./
