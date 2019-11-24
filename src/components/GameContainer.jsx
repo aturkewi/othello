@@ -26,6 +26,48 @@ function GameContainer() {
     setState({board: board, currentPlayerId: 1})
   }
 
+  const newCurrentPlayer = () => {
+    if(currentPlayerId === 1){
+      return 2
+    }else{
+      return 1
+    }
+  }
+
+  const getLocation = (rowIndex, columnIndex) => {
+    const row = board[rowIndex]
+    if(row){
+      return row[columnIndex]
+    }
+  }
+
+  const validMove = (row, column) => {
+    // is space free?
+    if(board[row][column] !== 0){
+      return false
+    }
+    // is it adjacent
+    const top = getLocation(row-1, column)
+    const bottom = getLocation(row+1, column)
+    const left = getLocation(row, column-1)
+    const right = getLocation(row, column+1)
+    if(top || bottom || left || right){
+      return true
+    }
+  }
+
+  const makeMove = (row, column) => {
+    // confirm valid move, alert otherwise
+    if(!validMove(row, column)){
+      alert("This is not a valid move!")
+      return
+    }
+    // update that square
+    board[row][column] = currentPlayerId
+    // check for flips and flip
+    setState({board: board, currentPlayerId: newCurrentPlayer()})
+  }
+
   return (
     <div>
       <p>
@@ -39,7 +81,7 @@ function GameContainer() {
           ''
         }
       </p>
-      <GameBoard board={board}/>
+      <GameBoard board={board} makeMove={makeMove}/>
     </div>
   );
 }

@@ -1,10 +1,10 @@
 import React, {useState} from 'react'
 import Row from './Row'
 
-function GameBoard({board}) {
+function GameBoard({board, makeMove}) {
   return(
     <div className="board">
-      {board.map((row, i) => <Row key={i} data={row} />)}
+      {board.map((row, i) => <Row key={i} row={i} makeMove={makeMove} data={row} />)}
     </div>
   )
 }
