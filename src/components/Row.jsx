@@ -4,7 +4,7 @@ import Cell from './Cell'
 function Row({ data }) {
   return(
     <div className="row">
-      {data.map( playerId => <Cell playerId={playerId} />)}
+      {data.map( (playerId, i) => <Cell key={i} playerId={playerId} />)}
     </div>
   )
 }
