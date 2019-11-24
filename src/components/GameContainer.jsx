@@ -130,7 +130,6 @@ function GameContainer() {
   }
 
   const checkEndGame = () => {
-    console.log("checking if game is over...")
     const score = {1: 0, 2: 0}
     let stillPlaying = false
     board.forEach( row => {
@@ -149,7 +148,6 @@ function GameContainer() {
   useEffect(checkEndGame)
 
   const makeMove = (row, column) => {
-    console.log(`Row: ${row} | Columnn: ${column}`)
     // confirm valid move, alert otherwise
     if(!validMove(row, column)){
       alert("This is not a valid move!")
