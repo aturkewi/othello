@@ -26,7 +26,7 @@ function GameContainer() {
     setState({board: board, currentPlayerId: 1})
   }
 
-  const newCurrentPlayer = () => {
+  const nextPlayer = () => {
     if(currentPlayerId === 1){
       return 2
     }else{
@@ -56,7 +56,71 @@ function GameContainer() {
     }
   }
 
+  const bottomFlips = (row, column) => {
+    let currentCellOwner = nextPlayer()
+    let offset = 1
+    while(currentCellOwner === nextPlayer()) {
+      currentCellOwner = getLocation(row + offset, column)
+      offset++
+    }
+    if(currentCellOwner == currentPlayerId){
+      for(let i=1; i < offset; i++){
+        board[row+i][column] = currentPlayerId
+      }
+    }
+  }
+
+  const topFlips = (row, column) => {
+    let currentCellOwner = nextPlayer()
+    let offset = 1
+    while(currentCellOwner === nextPlayer()) {
+      currentCellOwner = getLocation(row - offset, column)
+      offset++
+    }
+    if(currentCellOwner == currentPlayerId){
+      for(let i=1; i < offset; i++){
+        board[row-i][column] = currentPlayerId
+      }
+    }
+  }
+
+  const leftFlips = (row, column) => {
+    let currentCellOwner = nextPlayer()
+    let offset = 1
+    while(currentCellOwner === nextPlayer()) {
+      currentCellOwner = getLocation(row, column - offset)
+      offset++
+    }
+    if(currentCellOwner == currentPlayerId){
+      for(let i=1; i < offset; i++){
+        board[row][column-i] = currentPlayerId
+      }
+    }
+  }
+
+  const rightFlips = (row, column) => {
+    let currentCellOwner = nextPlayer()
+    let offset = 1
+    while(currentCellOwner === nextPlayer()) {
+      currentCellOwner = getLocation(row, column + offset)
+      offset++
+    }
+    if(currentCellOwner == currentPlayerId){
+      for(let i=1; i < offset; i++){
+        board[row][column+i] = currentPlayerId
+      }
+    }
+  }
+
+  const checkForFlips = (row, column) => {
+    bottomFlips(row, column)
+    topFlips(row, column)
+    leftFlips(row, column)
+    rightFlips(row, column)
+  }
+
   const makeMove = (row, column) => {
+    console.log(`Row: ${row} | Columnn: ${column}`)
     // confirm valid move, alert otherwise
     if(!validMove(row, column)){
       alert("This is not a valid move!")
@@ -65,7 +129,8 @@ function GameContainer() {
     // update that square
     board[row][column] = currentPlayerId
     // check for flips and flip
-    setState({board: board, currentPlayerId: newCurrentPlayer()})
+    checkForFlips(row, column)
+    setState({board: board, currentPlayerId: nextPlayer()})
   }
 
   return (

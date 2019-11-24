@@ -9,14 +9,14 @@
 
 .board {
   display: grid;
-  grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px ;
-  grid-column-gap: 5px;
+  grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px ;
+  grid-row-gap: 5px;
 }
 
 .row {
   display: grid;
-  grid-template-rows: 40px 40px 40px 40px 40px 40px 40px 40px ;
-  grid-row-gap: 5px;
+  grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px ;
+  grid-column-gap: 5px;
 }
 
 .cell {
