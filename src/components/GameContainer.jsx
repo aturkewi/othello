@@ -61,13 +61,29 @@ function GameContainer() {
     }, false)
   )
 
+  const getFlippableCellsForDirection = (rowStart, columnStart, rowShift, columnShift) => {
+
+  }
+
+  const getAllFlippableCells = (row, column) => {
+    flipDirecrtions.reduce( (flippableCells, shiftDirections) => (
+      flippableCells
+        .push(getFlippableCellsForDirection(row, column, shiftDirections[0], shiftDirections[1]))
+    ), [])
+  }
+
   const validMove = (row, column) => {
     // is space free?
     if(board[row][column] !== 0){
       return false
     }
 
-    return isAdjacent(row, column)
+    if(!isAdjacent(row, column)){
+      return false
+    }
+
+    const cellsToFlip = getAllFlippableCells(row, column)
+
   }
 
   const flip = (rowStart, columnStart, rowShift, columnShift) => {
