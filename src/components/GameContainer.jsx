@@ -135,10 +135,12 @@ function GameContainer() {
 
   return (
     <div>
-      <p>
-
-        {currentPlayerId ? `It is player ${currentPlayerId}'s turn` : ''}
-      </p>
+      <div className="column">
+        <div className={`cell player${currentPlayerId}`}>.</div>
+        <p>
+          {currentPlayerId ? `It is player ${currentPlayerId}'s turn` : ''}
+        </p>
+      </div>
       <p>
         {currentPlayerId === 0 ?
           <button onClick={startGame}>Start Game</button>
