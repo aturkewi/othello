@@ -41,82 +41,53 @@ function GameContainer() {
     }
   }
 
+  const flipDirecrtions = [
+    [1, 0], // down
+    [-1, 0], // up
+    [0, 1], // right
+    [0, -1], // left
+    [1, 1], // down and to the right
+    [1, -1], // up and to the right
+    [-1, 1], // down and to the left
+    [-1, -1] // up and to the left
+  ]
+
+  const isAdjacent = (row, column) => (
+    flipDirecrtions.reduce((acc, shiftDirections) => {
+      console.log(row, column)
+      const location = getLocation(row + shiftDirections[0], column + shiftDirections[1])
+      const taken = (location === 1) || (location === 2)
+      return acc || taken
+    }, false)
+  )
+
   const validMove = (row, column) => {
     // is space free?
     if(board[row][column] !== 0){
       return false
     }
-    // is it adjacent
-    const top = getLocation(row-1, column)
-    const bottom = getLocation(row+1, column)
-    const left = getLocation(row, column-1)
-    const right = getLocation(row, column+1)
-    if(top || bottom || left || right){
-      return true
-    }
+
+    return isAdjacent(row, column)
   }
 
-  const bottomFlips = (row, column) => {
+  const flip = (rowStart, columnStart, rowShift, columnShift) => {
     let currentCellOwner = nextPlayer()
     let offset = 1
     while(currentCellOwner === nextPlayer()) {
-      currentCellOwner = getLocation(row + offset, column)
+      currentCellOwner = getLocation(rowStart + offset * rowShift, columnStart  + offset * columnShift)
       offset++
     }
     if(currentCellOwner === currentPlayerId){
       for(let i=1; i < offset; i++){
-        board[row+i][column] = currentPlayerId
-      }
-    }
-  }
-
-  const topFlips = (row, column) => {
-    let currentCellOwner = nextPlayer()
-    let offset = 1
-    while(currentCellOwner === nextPlayer()) {
-      currentCellOwner = getLocation(row - offset, column)
-      offset++
-    }
-    if(currentCellOwner === currentPlayerId){
-      for(let i=1; i < offset; i++){
-        board[row-i][column] = currentPlayerId
-      }
-    }
-  }
-
-  const leftFlips = (row, column) => {
-    let currentCellOwner = nextPlayer()
-    let offset = 1
-    while(currentCellOwner === nextPlayer()) {
-      currentCellOwner = getLocation(row, column - offset)
-      offset++
-    }
-    if(currentCellOwner === currentPlayerId){
-      for(let i=1; i < offset; i++){
-        board[row][column-i] = currentPlayerId
-      }
-    }
-  }
-
-  const rightFlips = (row, column) => {
-    let currentCellOwner = nextPlayer()
-    let offset = 1
-    while(currentCellOwner === nextPlayer()) {
-      currentCellOwner = getLocation(row, column + offset)
-      offset++
-    }
-    if(currentCellOwner === currentPlayerId){
-      for(let i=1; i < offset; i++){
-        board[row][column+i] = currentPlayerId
+        board[rowStart + i * rowShift][columnStart + i * columnShift] = currentPlayerId
       }
     }
   }
 
   const checkForFlips = (row, column) => {
-    bottomFlips(row, column)
-    topFlips(row, column)
-    leftFlips(row, column)
-    rightFlips(row, column)
+    flipDirecrtions.forEach( shiftDirections => {
+      flip(row, column, shiftDirections[0], shiftDirections[1])
+    })
   }
 
   const endGame = (score) => {
