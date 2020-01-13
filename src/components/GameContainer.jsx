@@ -62,7 +62,17 @@ function GameContainer() {
   )
 
   const getFlippableCellsForDirection = (rowStart, columnStart, rowShift, columnShift) => {
-
+    let currentCellOwner = nextPlayer()
+    let offset = 1
+    while(currentCellOwner === nextPlayer()) {
+      currentCellOwner = getLocation(rowStart + offset * rowShift, columnStart  + offset * columnShift)
+      offset++
+    }
+    if(currentCellOwner === currentPlayerId){
+      for(let i=1; i < offset; i++){
+        board[rowStart + i * rowShift][columnStart + i * columnShift] = currentPlayerId
+      }
+    }
   }
 
   const getAllFlippableCells = (row, column) => {
