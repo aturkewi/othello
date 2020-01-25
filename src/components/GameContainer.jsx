@@ -54,7 +54,6 @@ function GameContainer() {
 
   const isAdjacent = (row, column) => (
     flipDirecrtions.reduce((acc, shiftDirections) => {
-      console.log(row, column)
       const location = getLocation(row + shiftDirections[0], column + shiftDirections[1])
       const taken = (location === 1) || (location === 2)
       return acc || taken
@@ -62,23 +61,34 @@ function GameContainer() {
   )
 
   const getFlippableCellsForDirection = (rowStart, columnStart, rowShift, columnShift) => {
-    let currentCellOwner = nextPlayer()
+    let currentCellOwner = getLocation(rowStart + rowShift, columnStart + columnShift) // nextPlayer()
     let offset = 1
     while(currentCellOwner === nextPlayer()) {
       currentCellOwner = getLocation(rowStart + offset * rowShift, columnStart  + offset * columnShift)
       offset++
     }
-    if(currentCellOwner === currentPlayerId){
-      for(let i=1; i < offset; i++){
-        board[rowStart + i * rowShift][columnStart + i * columnShift] = currentPlayerId
-      }
+
+    if(offset === 1){
+      return []
     }
+
+    if(currentCellOwner === currentPlayerId){
+      const flipableCells = []
+      for(let i=1; i < offset; i++){
+        flipableCells.push([rowStart + i * rowShift, columnStart + i * columnShift])
+        // board[rowStart + i * rowShift][columnStart + i * columnShift] = currentPlayerId
+      }
+      return flipableCells
+    }else{
+      return []
+    }
+
   }
 
   const getAllFlippableCells = (row, column) => {
-    flipDirecrtions.reduce( (flippableCells, shiftDirections) => (
+    return flipDirecrtions.reduce( (flippableCells, shiftDirections) => (
       flippableCells
-        .push(getFlippableCellsForDirection(row, column, shiftDirections[0], shiftDirections[1]))
+        .concat(getFlippableCellsForDirection(row, column, shiftDirections[0], shiftDirections[1]))
     ), [])
   }
 
@@ -88,12 +98,18 @@ function GameContainer() {
       return false
     }
 
+    // Is it next to something?
     if(!isAdjacent(row, column)){
       return false
     }
 
+    // are there flippable cells?
     const cellsToFlip = getAllFlippableCells(row, column)
-
+    if(cellsToFlip.length == 0){
+      return false
+    }else {
+      return true
+    }
   }
 
   const flip = (rowStart, columnStart, rowShift, columnShift) => {
