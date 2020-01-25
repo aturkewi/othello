@@ -19,11 +19,13 @@ function GameContainer() {
   const [{currentPlayerId, board}, setState] = useState(defaultState())
 
   const startGame = () => {
-    board[3][3] = 1
-    board[4][4] = 1
-    board[3][4] = 2
-    board[4][3] = 2
-    setState({board: board, currentPlayerId: 1})
+    const newBoard = createBoard()
+
+    newBoard[3][3] = 1
+    newBoard[4][4] = 1
+    newBoard[3][4] = 2
+    newBoard[4][3] = 2
+    setState({board: newBoard, currentPlayerId: 1})
   }
 
   const nextPlayer = () => {
@@ -191,6 +193,13 @@ function GameContainer() {
         }
       </p>
       <GameBoard board={board} makeMove={makeMove}/>
+      <p>
+        {currentPlayerId !== 0 ?
+          <button onClick={startGame}>Restart Game</button>
+          :
+          ''
+        }
+      </p>
     </div>
   );
 }
