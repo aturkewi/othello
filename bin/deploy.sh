@@ -1,8 +1,8 @@
 #!/bin/bash
 
-npm run build &&
-git branch -D gh-pages &&
-git checkout gh-pages &&
+npm run build
+git branch -D gh-pages
+git checkout -b gh-pages &&
 rm -rf static/ &&
 mv ./build/* ./ &&
 git add . &&
